@@ -20,3 +20,10 @@ AudioImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 112535
+  packageName: Smart Lighting 2D
+  packageVersion: 2022.11.0
+  assetPath: Assets/FunkyCode/Demos - SmartLighting2D/Demos - Intermediate/5 - Race/Resources/Audio/Car.wav
+  uploadId: 541941
