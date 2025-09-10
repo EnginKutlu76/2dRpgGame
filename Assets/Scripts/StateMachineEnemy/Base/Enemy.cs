@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDamageable,IEnemyMoveable,ITriggerCheckable
+public class Enemy : MonoBehaviour, IDamageable,IMoveable,ITriggerCheckable
 {
-    [field: SerializeField] public float MaxHealth { get; set; } = 100f;
-    public float CurrentHealth { get; set; }
+    [field: SerializeField] public float _maxHealth { get; set; } = 100f;
+    public float _currentHealth { get; set; }
     public Rigidbody2D rb { get; set; }
     public bool IsFacingRight { get; set; }
     public bool IsAggroed { get; set; }
@@ -33,7 +33,7 @@ public class Enemy : MonoBehaviour, IDamageable,IEnemyMoveable,ITriggerCheckable
     }
     private void Start()
     {
-        CurrentHealth = MaxHealth;
+        _currentHealth = _maxHealth;
     }
     private void Update()
     {
@@ -46,8 +46,8 @@ public class Enemy : MonoBehaviour, IDamageable,IEnemyMoveable,ITriggerCheckable
     #region Health/Death Functions
     public void Damage(float damageAmount)
     {
-        CurrentHealth -= damageAmount;
-        if (CurrentHealth <= 0f)
+        _currentHealth -= damageAmount;
+        if (_currentHealth <= 0f)
         {
             Die();
         }
