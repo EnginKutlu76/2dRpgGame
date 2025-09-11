@@ -26,7 +26,7 @@ public class AttackState : PlayerStates
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        player.MoveObject(Vector3.zero);
+   //     player.MoveObject(Vector3.zero);
 
         /*Object pooling ile  mermi fýrlatma kodu tarafý*/
     

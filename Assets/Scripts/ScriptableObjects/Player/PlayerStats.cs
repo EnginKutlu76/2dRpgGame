@@ -4,12 +4,12 @@ using UnityEngine;
 public class PlayerStats : ScriptableObject
 {
     [Header("Health")]
-    public int _maxHealth = 100;
+    public int MaxHealth = 100;
 
     [Header("Combat")]
-    public int _baseDamage = 10;
+    public int BaseDamage = 10;
 
     [Header("Movement")]
-    public float _moveSpeed = 5f;
-    public float _jumpForce = 12f;
+    public float MoveSpeed = 5f;
+    public float JumpForce = 12f;
 }

@@ -9,6 +9,11 @@ public class IdleState : PlayerStates
     {
         base.AnimationTriggerEvent(triggerType);
     }
+    public override void AnimationBoolEvent(Player.AnimationBoolType boolType, bool value)
+    {
+        base.AnimationBoolEvent(boolType,value);
+    }
+
     public override void EnterState()
     {
         base.EnterState();
@@ -20,8 +25,16 @@ public class IdleState : PlayerStates
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-        player.StateMachine.ChangeState(player.IdleState);
+
+        float move = player.Input.GetHorizontal();
+
+        if (move != 0)
+        {
+            player.StateMachine.ChangeState(player.MoveState);
+        }
+        AnimationBoolEvent(Player.AnimationBoolType.Move, false);
     }
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();

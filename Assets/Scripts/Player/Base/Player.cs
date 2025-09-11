@@ -1,13 +1,18 @@
 using UnityEngine;
-using static Enemy;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
+
 public class Player : MonoBehaviour, IMoveable
 {
+    #region Movement&Flip Variables
     public Rigidbody2D rb { get; set; }
     public bool IsFacingRight { get; set; }
+    public IPlayerInput Input;
+    #endregion
 
     public PlayerStats stats;
+    private Animator _animator;
 
     #region State Machine Variables
     public PlayerStateMachine StateMachine { get; set; }
@@ -20,11 +25,12 @@ public class Player : MonoBehaviour, IMoveable
 
     #endregion
 
+    #region GroundCheck
     [Header("Ground Check")]
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private float _groundRadius = 0.2f;
     [SerializeField] private LayerMask _groundLayer;
-
+    #endregion
     private void Awake()
     {
         StateMachine = new PlayerStateMachine();
@@ -35,10 +41,14 @@ public class Player : MonoBehaviour, IMoveable
         AttackState = new AttackState(this,StateMachine);
         HitState = new HitState(this,StateMachine);
         DeathState = new DeathState(this,StateMachine);
+
+        _animator = GetComponent<Animator>();
     }
     private void Start()
     {
-        
+         Input = new NewInputSystemAdapter();
+         rb = GetComponent<Rigidbody2D>();
+        StateMachine.Initialize(IdleState);
     }
     private void Update()
     {
@@ -48,7 +58,7 @@ public class Player : MonoBehaviour, IMoveable
     {
         StateMachine.CurrentPlayerState.PhysicsUpdate();
     }
-    #region Movement&Flip
+    #region Movement&Flip Controller
     public void CheckForLeftOrRightFacing(Vector2 velocity)
     {
         if (IsFacingRight && velocity.x < 0f)
@@ -66,17 +76,38 @@ public class Player : MonoBehaviour, IMoveable
     }
     public void MoveObject(Vector2 velocity)
     {
-        throw new System.NotImplementedException();
+        CheckForLeftOrRightFacing(velocity);
     }
     #endregion
 
-    private void AnimationTriggerEvent(AnimationTriggerType triggerType)
+    #region AnimationTypes
+    private void AnimationTriggerEvent(AnimationTriggerType triggerType)//Stateden Animatora tetik gönderme mekanizmasýdor
     {
-        StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
+            StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
     }
-    public enum AnimationTriggerType
+    public void AnimationBoolEvent(AnimationBoolType boolType, bool value)
     {
-        EnemyDamaged,
-        PlayerFootstepSound
+        string boolName = boolType.ToString();
+        if (_animator != null)
+        {
+            _animator.SetBool(boolName, value);
+        }
+        else
+        {
+            Debug.LogError("Animator null! Player GameObject'ine Animator ekleyin.");
+        }
     }
+    public enum AnimationTriggerType//hangi tetik olayýnýn gönderiliceðini belirler.
+    {
+        Attack,
+        Hit,
+        Death
+    }
+    public enum AnimationBoolType
+    {
+        Move,
+        Jump
+    }
+    #endregion
+
 }

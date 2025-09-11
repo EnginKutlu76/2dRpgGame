@@ -15,4 +15,5 @@ public class PlayerStates
     public virtual void FrameUpdate() { }//açýklama
     public virtual void PhysicsUpdate() { }//açýklama
     public virtual void AnimationTriggerEvent(Player.AnimationTriggerType triggerType) { }//açýklama
+    public virtual void AnimationBoolEvent(Player.AnimationBoolType boolType,bool value) { }//açýklama
 }
