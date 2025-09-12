@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Windows;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -8,8 +9,9 @@ public class Player : MonoBehaviour, IMoveable
     #region Movement&Flip Variables
     public Rigidbody2D rb { get; set; }
     public bool IsFacingRight { get; set; }
-    public IPlayerInput Input;
     #endregion
+
+    public IPlayerInput Input;
 
     public PlayerStats stats;
     private Animator _animator;
@@ -30,6 +32,7 @@ public class Player : MonoBehaviour, IMoveable
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private float _groundRadius = 0.2f;
     [SerializeField] private LayerMask _groundLayer;
+    public bool IsGrounded;
     #endregion
     private void Awake()
     {
@@ -57,6 +60,11 @@ public class Player : MonoBehaviour, IMoveable
     private void FixedUpdate()
     {
         StateMachine.CurrentPlayerState.PhysicsUpdate();
+        HandleJump();
+    }
+    private void HandleJump()
+    {
+        IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundRadius, _groundLayer);
     }
     #region Movement&Flip Controller
     public void CheckForLeftOrRightFacing(Vector2 velocity)

@@ -28,7 +28,7 @@ public class IdleState : PlayerStates
 
         float move = player.Input.GetHorizontal();
 
-        if (move != 0)
+        if (move != 0 && player.IsGrounded)
         {
             player.StateMachine.ChangeState(player.MoveState);
         }

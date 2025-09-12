@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoveState : PlayerStates
@@ -34,7 +33,7 @@ public class MoveState : PlayerStates
         AnimationBoolEvent(Player.AnimationBoolType.Move, MoveInput != 0);
 
         
-        if (MoveInput == 0 /* && player.IsGrounded() */)  // IsGrounded() implement et eðer yoksa
+        if (MoveInput == 0  && player.IsGrounded)  // IsGrounded() implement et eðer yoksa
         {
             playerStateMachine.ChangeState(player.IdleState);
         }
