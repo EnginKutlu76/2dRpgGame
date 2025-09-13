@@ -27,17 +27,31 @@ public class IdleState : PlayerStates
         base.FrameUpdate();
 
         float move = player.Input.GetHorizontal();
-
+        bool jump = player.Input.JumpPressed();
         if (move != 0 && player.IsGrounded)
         {
             player.StateMachine.ChangeState(player.MoveState);
         }
+        else if (player.IsGrounded && jump)
+        {
+            player.StateMachine.ChangeState(player.JumpState);
+        }
+
         AnimationBoolEvent(Player.AnimationBoolType.Move, false);
+        AnimationBoolEvent(Player.AnimationBoolType.Jump, false);
     }
 
+    //public override void PhysicsUpdate()
+    //{
+    //    base.PhysicsUpdate();
+    //}
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+
+        // Ensure no horizontal movement in idle (stop sliding)
+        player.rb.linearVelocity = new Vector2(0f, player.rb.linearVelocity.y);
+        player.MoveObject(player.rb.linearVelocity);
     }
 
 }

@@ -51,7 +51,7 @@ public class Player : MonoBehaviour, IMoveable
     {
          Input = new NewInputSystemAdapter();
          rb = GetComponent<Rigidbody2D>();
-        StateMachine.Initialize(IdleState);
+         StateMachine.Initialize(IdleState);
     }
     private void Update()
     {

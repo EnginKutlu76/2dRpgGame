@@ -2,7 +2,7 @@
 
 public class JumpState : PlayerStates
 {
-    public bool hasJumped;
+    public bool jump;
     public JumpState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     {
     }
@@ -13,52 +13,50 @@ public class JumpState : PlayerStates
     public override void EnterState()
     {
         base.EnterState();
-        // İlk girişte bayrağı işaretle
-        hasJumped = true;
-
-        // Animasyon başlat
         AnimationBoolEvent(Player.AnimationBoolType.Jump, true);
 
-        // Zıplamayı bir kere uygula
-        player.rb.linearVelocity = new Vector2(player.rb.linearVelocity.x, player.stats.JumpForce);
+        float moveInput = player.Input.GetHorizontal();
+
+        // Apply jump force immediately on enter (assuming we entered due to jump input)
+        player.rb.linearVelocity = new Vector2(moveInput * player.stats.MoveSpeed, player.stats.JumpForce);
 
         player.MoveObject(player.rb.linearVelocity);
     }
+
     public override void ExitState()
     {
         base.ExitState();
         AnimationBoolEvent(Player.AnimationBoolType.Jump, false);
     }
+
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-
-        //if (player.IsGrounded && hasJumped)
-        //{
-        //    // Yere indi → Idle’a geç
-        //    playerStateMachine.ChangeState(player.IdleState);
-        //}
-        if (player.Input.JumpPressed() && player.IsGrounded)
-        {
-            playerStateMachine.ChangeState(player.JumpState);
-        }
     }
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        //IsJumped = player.Input.JumpPressed();
 
-        //AnimationBoolEvent(Player.AnimationBoolType.Jump, player.Input.JumpPressed());
+        float moveInput = player.Input.GetHorizontal();
 
+        // Allow air control by updating horizontal velocity
+        player.rb.linearVelocity = new Vector2(moveInput * player.stats.MoveSpeed, player.rb.linearVelocity.y);
 
-        if (!player.IsGrounded)
-        {
-            playerStateMachine.ChangeState(player.IdleState);
-        }
-
-        //player.rb.linearVelocity = new Vector2(player.rb.linearVelocity.x, player.stats.JumpForce);
-
-        // Velocity'yi ayarladıktan sonra flip kontrolünü çağır
         player.MoveObject(player.rb.linearVelocity);
+
+        // Check for landing and transition back to ground states
+        if (player.IsGrounded)
+        {
+            if (moveInput == 0)
+            {
+                playerStateMachine.ChangeState(player.IdleState);
+            }
+            else
+            {
+                playerStateMachine.ChangeState(player.MoveState);
+            }
+        }
     }
 }
+

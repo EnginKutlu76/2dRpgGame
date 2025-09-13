@@ -31,17 +31,19 @@ public class MoveState : PlayerStates
         MoveInput = player.Input.GetHorizontal();
 
         AnimationBoolEvent(Player.AnimationBoolType.Move, MoveInput != 0);
+        bool jump = player.Input.JumpPressed();
 
-        
-        if (MoveInput == 0  && player.IsGrounded)  // IsGrounded() implement et eðer yoksa
+
+        if (MoveInput == 0  && player.IsGrounded && jump == false)  
         {
             playerStateMachine.ChangeState(player.IdleState);
         }
-
-        // Velocity'yi fizik adýmý içinde uygula – bu hareketi düzeltir
+        else if (player.IsGrounded && jump )
+        {
+            player.StateMachine.ChangeState(player.JumpState);
+        }
         player.rb.linearVelocity = new Vector2(MoveInput * player.stats.MoveSpeed, player.rb.linearVelocity.y);
 
-        // Velocity'yi ayarladýktan sonra flip kontrolünü çaðýr
         player.MoveObject(player.rb.linearVelocity);
     }
 }
