@@ -4,7 +4,17 @@ public class JumpState : PlayerStates
 {
     public bool jump;
     public JumpState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
-    {
+    { // Idle → Move
+        Transitions.Add(new Transitions(
+            player.MoveState,
+            () => player.Input.GetHorizontal() != 0 && player.IsGrounded
+        ));
+
+        // Idle → Jump
+        Transitions.Add(new Transitions(
+            player.IdleState,
+            () => player.Input.GetHorizontal() == 0 && player.IsGrounded
+        ));
     }
     public override void AnimationBoolEvent(Player.AnimationBoolType boolType, bool value)
     {
@@ -46,17 +56,16 @@ public class JumpState : PlayerStates
         player.MoveObject(player.rb.linearVelocity);
 
         // Check for landing and transition back to ground states
-        if (player.IsGrounded)
-        {
-            if (moveInput == 0)
-            {
-                playerStateMachine.ChangeState(player.IdleState);
-            }
-            else
-            {
-                playerStateMachine.ChangeState(player.MoveState);
-            }
-        }
+        //if (player.IsGrounded)
+        //{
+        //    if (moveInput == 0)
+        //    {
+        //        playerStateMachine.ChangeState(player.IdleState);
+        //    }
+        //    else
+        //    {
+        //        playerStateMachine.ChangeState(player.MoveState);
+        //    }
+        //}
     }
 }
-

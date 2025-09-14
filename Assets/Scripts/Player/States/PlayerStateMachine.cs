@@ -1,19 +1,36 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerStateMachine
 {
-    public PlayerStates CurrentPlayerState {  get; set; }
+    public PlayerStates CurrentPlayerState { get; set; }
+    public void LogicUpdate()
+    {
+        if (CurrentPlayerState == null)
+        {
+            Debug.LogError("CurrentPlayerState is null in LogicUpdate!");
+            return;
+        }
 
+        foreach (var transition in CurrentPlayerState.Transitions)
+        {
+            if (transition.ConditionMet())
+            {
+                ChangeState(transition.TargetState);
+                break;
+            }
+        }
+
+        CurrentPlayerState.FrameUpdate();
+    }
     public void Initialize(PlayerStates startingState)
     {
         CurrentPlayerState = startingState;
         CurrentPlayerState.EnterState();
     }
-    public void ChangeState(PlayerStates newState)//burda önce mevcut durumdan çýkýlýyor sonra yeni state baðlanýyor sonra da yeni statei giriþ state yapýlýyor
+    public void ChangeState(PlayerStates newState)//burda ï¿½nce mevcut durumdan ï¿½ï¿½kï¿½lï¿½yor sonra yeni state baï¿½lanï¿½yor sonra da yeni statei giriï¿½ state yapï¿½lï¿½yor
     {
         CurrentPlayerState.ExitState();
         CurrentPlayerState = newState;
         CurrentPlayerState.EnterState();
     }
 }
-

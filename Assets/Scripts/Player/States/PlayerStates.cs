@@ -1,20 +1,21 @@
-using Unity.VisualScripting;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerStates
 {
-    protected Player player;//Bu state üzerinde iþlem yapan Player objesini tutar
-    protected PlayerStateMachine playerStateMachine;//State makineleri arasýnda geçiþ yapmayý saðlayan referans
-    public PlayerStates(Player player , PlayerStateMachine playerStateMachine)//Constructor: State oluþturulurken Player ve StateMachine referanslarýný alýr
+    public List<Transitions> Transitions = new List<Transitions>();
+    protected Player player;//Bu state ï¿½zerinde iï¿½lem yapan Player objesini tutar
+    protected PlayerStateMachine playerStateMachine;//State makineleri arasï¿½nda geï¿½iï¿½ yapmayï¿½ saï¿½layan referans
+    public PlayerStates(Player player, PlayerStateMachine playerStateMachine)//Constructor: State oluï¿½turulurken Player ve StateMachine referanslarï¿½nï¿½ alï¿½r
     {
         this.player = player;
         this.playerStateMachine = playerStateMachine;
     }
-    
-    public virtual void EnterState() { }//State'e girildiðinde çalýþacak kodlar buraya yazýlýr
-    public virtual void ExitState() { }//State'den çýkarken çalýþacak kodlar buraya yazýlýr
-    public virtual void FrameUpdate() { }//Frame bazlý update (Input veya animasyon gibi her frame güncellenmesi gereken iþler)
-    public virtual void PhysicsUpdate() { }//Physics bazlý update (Rigidbody hareketleri gibi fizik tabanlý iþlemler)
-    public virtual void AnimationTriggerEvent(Player.AnimationTriggerType triggerType) { }// Animator'dan gelen trigger eventlerini yakalamak için kullanýlýr
-    public virtual void AnimationBoolEvent(Player.AnimationBoolType boolType,bool value) { }//Animator'dan gelen bool eventlerini yakalamak için kullanýlýr
+
+    public virtual void EnterState() { }//State'e girildiï¿½inde ï¿½alï¿½ï¿½acak kodlar buraya yazï¿½lï¿½r
+    public virtual void ExitState() { }//State'den ï¿½ï¿½karken ï¿½alï¿½ï¿½acak kodlar buraya yazï¿½lï¿½r
+    public virtual void FrameUpdate() { }//Frame bazlï¿½ update (Input veya animasyon gibi her frame gï¿½ncellenmesi gereken iï¿½ler)
+    public virtual void PhysicsUpdate() { }//Physics bazlï¿½ update (Rigidbody hareketleri gibi fizik tabanlï¿½ iï¿½lemler)
+    public virtual void AnimationTriggerEvent(Player.AnimationTriggerType triggerType) { }// Animator'dan gelen trigger eventlerini yakalamak iï¿½in kullanï¿½lï¿½r
+    public virtual void AnimationBoolEvent(Player.AnimationBoolType boolType, bool value) { }//Animator'dan gelen bool eventlerini yakalamak iï¿½in kullanï¿½lï¿½r
 }

@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.Windows;
+ï»¿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -38,29 +37,41 @@ public class Player : MonoBehaviour, IMoveable
     {
         StateMachine = new PlayerStateMachine();
 
-        IdleState = new IdleState(this,StateMachine);
-        MoveState = new MoveState(this,StateMachine);
-        JumpState = new JumpState(this,StateMachine);
-        AttackState = new AttackState(this,StateMachine);
-        HitState = new HitState(this,StateMachine);
-        DeathState = new DeathState(this,StateMachine);
+        IdleState = new IdleState(this, StateMachine);
+        MoveState = new MoveState(this, StateMachine);
+        JumpState = new JumpState(this, StateMachine);
+        AttackState = new AttackState(this, StateMachine);
+        HitState = new HitState(this, StateMachine);
+        DeathState = new DeathState(this, StateMachine);
 
         _animator = GetComponent<Animator>();
+        Debug.Log("IdleState: " + (IdleState != null ? "Initialized" : "Null"));
     }
     private void Start()
     {
-         Input = new NewInputSystemAdapter();
-         rb = GetComponent<Rigidbody2D>();
-         StateMachine.Initialize(IdleState);
+        Input = new NewInputSystemAdapter();
+        rb = GetComponent<Rigidbody2D>();
+        StateMachine.Initialize(IdleState);
+        Debug.Log("StateMachine Initialized with: " + (StateMachine.CurrentPlayerState != null ? StateMachine.CurrentPlayerState.GetType().Name : "Null"));
     }
     private void Update()
     {
-        StateMachine.CurrentPlayerState.FrameUpdate();
+        //StateMachine.CurrentPlayerState.FrameUpdate();
+        StateMachine.LogicUpdate();
     }
     private void FixedUpdate()
     {
-        StateMachine.CurrentPlayerState.PhysicsUpdate();
-        HandleJump();
+        //StateMachine.CurrentPlayerState.PhysicsUpdate();
+        //HandleJump();
+        if (StateMachine.CurrentPlayerState != null)
+        {
+            StateMachine.CurrentPlayerState.PhysicsUpdate();
+            HandleJump();
+        }
+        else
+        {
+            Debug.LogError("CurrentPlayerState is null in FixedUpdate!");
+        }
     }
     private void HandleJump()
     {
@@ -89,9 +100,9 @@ public class Player : MonoBehaviour, IMoveable
     #endregion
 
     #region AnimationTypes
-    private void AnimationTriggerEvent(AnimationTriggerType triggerType)//Stateden Animatora tetik gönderme mekanizmasýdor
+    private void AnimationTriggerEvent(AnimationTriggerType triggerType)//Stateden Animatora tetik gÃ¶nderme mekanizmasÃ½dor
     {
-            StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
+        StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
     }
     public void AnimationBoolEvent(AnimationBoolType boolType, bool value)
     {
@@ -105,7 +116,7 @@ public class Player : MonoBehaviour, IMoveable
             Debug.LogError("Animator null! Player GameObject'ine Animator ekleyin.");
         }
     }
-    public enum AnimationTriggerType//hangi tetik olayýnýn gönderiliceðini belirler.
+    public enum AnimationTriggerType//hangi tetik olayÃ½nÃ½n gÃ¶nderiliceÃ°ini belirler.
     {
         Attack,
         Hit,
