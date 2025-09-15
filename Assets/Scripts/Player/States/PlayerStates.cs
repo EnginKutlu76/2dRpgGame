@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerStates
 {
     public List<Transitions> Transitions = new List<Transitions>();
+
     protected Player player;//Bu state �zerinde i�lem yapan Player objesini tutar
     protected PlayerStateMachine playerStateMachine;//State makineleri aras�nda ge�i� yapmay� sa�layan referans
     public PlayerStates(Player player, PlayerStateMachine playerStateMachine)//Constructor: State olu�turulurken Player ve StateMachine referanslar�n� al�r

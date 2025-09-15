@@ -4,16 +4,6 @@ public class IdleState : PlayerStates
 {
     public IdleState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
     { // Idle → Move
-        Transitions.Add(new Transitions(
-            player.MoveState,
-            () => player.Input.GetHorizontal() != 0 && player.IsGrounded
-        ));
-
-        // Idle → Jump
-        Transitions.Add(new Transitions(
-            player.JumpState,
-            () => player.Input.JumpPressed() && player.IsGrounded
-        ));
     }
     public override void AnimationTriggerEvent(Player.AnimationTriggerType triggerType)
     {
@@ -27,6 +17,8 @@ public class IdleState : PlayerStates
     public override void EnterState()
     {
         base.EnterState();
+        AnimationBoolEvent(Player.AnimationBoolType.Move, false);
+        AnimationBoolEvent(Player.AnimationBoolType.Jump, false);
     }
     public override void ExitState()
     {
@@ -47,8 +39,7 @@ public class IdleState : PlayerStates
         //    player.StateMachine.ChangeState(player.JumpState);
         //}
 
-        AnimationBoolEvent(Player.AnimationBoolType.Move, false);
-        AnimationBoolEvent(Player.AnimationBoolType.Jump, false);
+       
     }
     public override void PhysicsUpdate()
     {

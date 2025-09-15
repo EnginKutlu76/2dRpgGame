@@ -49,29 +49,22 @@ public class Player : MonoBehaviour, IMoveable
     }
     private void Start()
     {
+        StateMachine.Initialize(IdleState);
         Input = new NewInputSystemAdapter();
         rb = GetComponent<Rigidbody2D>();
-        StateMachine.Initialize(IdleState);
-        Debug.Log("StateMachine Initialized with: " + (StateMachine.CurrentPlayerState != null ? StateMachine.CurrentPlayerState.GetType().Name : "Null"));
+        //   Debug.Log("StateMachine Initialized with: " + (StateMachine.CurrentPlayerState != null ? StateMachine.CurrentPlayerState.GetType().Name : "Null"));
+        StateMachine.ConfigureTransitions(this);
     }
     private void Update()
     {
-        //StateMachine.CurrentPlayerState.FrameUpdate();
+       // StateMachine.CurrentPlayerState.FrameUpdate();
         StateMachine.LogicUpdate();
     }
     private void FixedUpdate()
     {
-        //StateMachine.CurrentPlayerState.PhysicsUpdate();
-        //HandleJump();
-        if (StateMachine.CurrentPlayerState != null)
-        {
-            StateMachine.CurrentPlayerState.PhysicsUpdate();
-            HandleJump();
-        }
-        else
-        {
-            Debug.LogError("CurrentPlayerState is null in FixedUpdate!");
-        }
+        StateMachine.CurrentPlayerState.PhysicsUpdate();
+        StateMachine.CurrentPlayerState.PhysicsUpdate();
+        HandleJump();
     }
     private void HandleJump()
     {
@@ -129,4 +122,4 @@ public class Player : MonoBehaviour, IMoveable
     }
     #endregion
 
-}
+} 

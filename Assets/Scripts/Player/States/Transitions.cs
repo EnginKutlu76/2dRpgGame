@@ -1,17 +1,19 @@
-using UnityEngine;
-public class Transitions 
-{
-    public PlayerStates TargetState;      // where to go
-    public System.Func<bool> Condition;   // when to go
+using System.Collections.Generic;
+using System.Linq;
 
-    public Transitions(PlayerStates targetState, System.Func<bool> condition)
+public class Transitions
+{
+    public PlayerStates TargetState;
+    private List<ICondition> conditions;
+
+    public Transitions(PlayerStates target, params ICondition[] conditions)
     {
-        TargetState = targetState;
-        Condition = condition;
+        TargetState = target;
+        this.conditions = conditions.ToList();
     }
 
-    public bool ConditionMet()
+    public bool CanTransition()
     {
-        return Condition.Invoke();
+        return conditions.All(c => c.Evaluate());
     }
 }
