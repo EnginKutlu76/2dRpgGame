@@ -12,9 +12,13 @@ public class Player : MonoBehaviour, IMoveable
 
     public IPlayerInput Input;
 
+    public Enemy enemy;
+
     public PlayerStats stats;
     private Animator _animator;
-
+   
+    [SerializeField] private HitBox enemyHitBox;
+    
     #region State Machine Variables
     public PlayerStateMachine StateMachine { get; set; }
     public IdleState IdleState { get; set; }
@@ -49,11 +53,15 @@ public class Player : MonoBehaviour, IMoveable
     }
     private void Start()
     {
+        stats.CurHealth = stats.MaxHealth;
         StateMachine.Initialize(IdleState);
         Input = new NewInputSystemAdapter();
         rb = GetComponent<Rigidbody2D>();
         //   Debug.Log("StateMachine Initialized with: " + (StateMachine.CurrentPlayerState != null ? StateMachine.CurrentPlayerState.GetType().Name : "Null"));
         StateMachine.ConfigureTransitions(this);
+
+        enemyHitBox.OnHitPlayer += TakeDamage;
+
     }
     private void Update()
     {
@@ -63,13 +71,25 @@ public class Player : MonoBehaviour, IMoveable
     private void FixedUpdate()
     {
         StateMachine.CurrentPlayerState.PhysicsUpdate();
-        StateMachine.CurrentPlayerState.PhysicsUpdate();
         HandleJump();
     }
     private void HandleJump()
     {
         IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundRadius, _groundLayer);
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+    }
+    public void TakeDamage(float damage)
+    {
+        stats.CurHealth -= damage;
+        if (stats.CurHealth <= 0)
+            StateMachine.ChangeState(DeathState);
+        else
+            StateMachine.ChangeState(HitState);
+    }
+
     #region Movement&Flip Controller
     public void CheckForLeftOrRightFacing(Vector2 velocity)
     {
@@ -95,7 +115,16 @@ public class Player : MonoBehaviour, IMoveable
     #region AnimationTypes
     private void AnimationTriggerEvent(AnimationTriggerType triggerType)//Stateden Animatora tetik gönderme mekanizmasýdor
     {
-        StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
+        string triggerName = triggerType.ToString();
+        if (_animator != null )
+        {
+            _animator.SetTrigger(triggerName);
+        }
+        else
+        {
+            Debug.LogError("error has appeard");
+        }
+       // StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
     }
     public void AnimationBoolEvent(AnimationBoolType boolType, bool value)
     {
@@ -118,7 +147,8 @@ public class Player : MonoBehaviour, IMoveable
     public enum AnimationBoolType
     {
         Move,
-        Jump
+        Jump,
+        Idle
     }
     #endregion
 

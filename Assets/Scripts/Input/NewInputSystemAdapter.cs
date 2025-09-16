@@ -10,6 +10,10 @@ public class NewInputSystemAdapter : IPlayerInput
         _actions.Enable();
     }
 
+    public bool AttackPressed()
+    {
+        return _actions.Player.Attack.WasPressedThisFrame();
+    }
     public float GetHorizontal()
     {
         return _actions.Player.Move.ReadValue<Vector2>().x;

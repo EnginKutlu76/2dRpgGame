@@ -11,16 +11,31 @@ public class PlayerStateMachine
     public void ConfigureTransitions(Player player)
     {
         transitions[player.IdleState] = new List<Transitions>()
-    {
-        new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
-        new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player))
-    };
+        {
+            new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
+        };
 
         transitions[player.MoveState] = new List<Transitions>()
-    {
-        new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
-        new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player))
-    };
+        {
+            new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
+        };
+    
+        transitions[player.JumpState] = new List<Transitions>()
+        {
+            new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
+        };
+        transitions[player.AttackState] = new List<Transitions>()
+        {
+            new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player))
+        };
     }
     public void LogicUpdate()
     {

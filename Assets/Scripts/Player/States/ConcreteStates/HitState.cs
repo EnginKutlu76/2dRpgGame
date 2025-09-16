@@ -10,13 +10,20 @@ public class HitState : PlayerStates
     {
         base.AnimationTriggerEvent(triggerType);
     }
+    public override void AnimationBoolEvent(Player.AnimationBoolType boolType, bool value)
+    {
+        base.AnimationBoolEvent(boolType,value);
+    }
     public override void EnterState()
     {
         base.EnterState();
+        AnimationTriggerEvent(Player.AnimationTriggerType.Hit);
+
     }
     public override void ExitState()
     {
         base.ExitState();
+        AnimationBoolEvent(Player.AnimationBoolType.Idle,true);
     }
     public override void FrameUpdate()
     {

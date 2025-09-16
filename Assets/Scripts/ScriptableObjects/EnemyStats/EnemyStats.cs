@@ -1,14 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Player Stats" )]
-public class PlayerStats : ScriptableObject
+[CreateAssetMenu(menuName = "Enemy Stats")]
+public class EnemyStats: ScriptableObject
 {
     [Header("Health")]
-    public float MaxHealth = 100;
+    public  float MaxHealth = 100;
     public float CurHealth;
 
     [Header("Combat")]
-    public int BaseDamage = 10;
+    public float BaseDamage ;
 
     [Header("Movement")]
     public float MoveSpeed = 5f;

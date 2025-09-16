@@ -3,7 +3,7 @@
 public class IdleState : PlayerStates
 {
     public IdleState(Player player, PlayerStateMachine playerStateMachine) : base(player, playerStateMachine)
-    { // Idle → Move
+    { 
     }
     public override void AnimationTriggerEvent(Player.AnimationTriggerType triggerType)
     {
@@ -17,37 +17,31 @@ public class IdleState : PlayerStates
     public override void EnterState()
     {
         base.EnterState();
+
+        AnimationBoolEvent(Player.AnimationBoolType.Idle, true);
         AnimationBoolEvent(Player.AnimationBoolType.Move, false);
         AnimationBoolEvent(Player.AnimationBoolType.Jump, false);
     }
     public override void ExitState()
     {
         base.ExitState();
+        AnimationBoolEvent(Player.AnimationBoolType.Idle, false);
     }
     public override void FrameUpdate()
     {
         base.FrameUpdate();
-
-        //float move = player.Input.GetHorizontal();
-        //bool jump = player.Input.JumpPressed();
-        //if (move != 0 && player.IsGrounded)
-        //{
-        //    player.StateMachine.ChangeState(player.MoveState);
-        //}
-        //else if (player.IsGrounded && jump)
-        //{
-        //    player.StateMachine.ChangeState(player.JumpState);
-        //}
-
-       
     }
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        float MoveInput = player.Input.GetHorizontal();
+
+        AnimationBoolEvent(Player.AnimationBoolType.Move, MoveInput != 0);
 
         // Ensure no horizontal movement in idle (stop sliding)
-        player.rb.linearVelocity = new Vector2(0f, player.rb.linearVelocity.y);
+        player.rb.linearVelocity = new Vector2(MoveInput * player.stats.MoveSpeed, player.rb.linearVelocity.y);
         player.MoveObject(player.rb.linearVelocity);
+
     }
 
 }

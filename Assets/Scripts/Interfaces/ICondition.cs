@@ -29,4 +29,11 @@ public class HasNoMoveInputCondition : ICondition
     public HasNoMoveInputCondition(Player player) { this.player = player; }
     public bool Evaluate() => player.Input.GetHorizontal() == 0;
 }
+public class AttackPressedCondition : ICondition
+{
+    private Player player;
+    public AttackPressedCondition(Player player) { this.player = player; }
+    public bool Evaluate() => player.Input.AttackPressed();
+}
+
 
