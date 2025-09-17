@@ -21,10 +21,7 @@ public class HitState : PlayerStates
             player.StateMachine.ChangeState(player.DeathState);
             return;
         }
-
-        // Hit animasyonunu tetikle
         AnimationTriggerEvent(Player.AnimationTriggerType.Hit);
-        Debug.Log("Player HitState Entered");
     }
     public override void ExitState()
     {

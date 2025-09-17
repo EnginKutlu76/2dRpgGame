@@ -17,10 +17,13 @@ public class Player : MonoBehaviour, IMoveable
 
     public PlayerStats stats;
     private Animator _animator;
+    
+    #region Death&Hit Variables
     public event Action OnDamageTaken;
     public bool HasTakenDamage { get; private set; }
     [SerializeField] private HitBox enemyHitBox;
-    
+    #endregion
+
     #region State Machine Variables
     public PlayerStateMachine StateMachine { get; set; }
     public IdleState IdleState { get; set; }
@@ -59,7 +62,6 @@ public class Player : MonoBehaviour, IMoveable
         StateMachine.Initialize(IdleState);
         Input = new NewInputSystemAdapter();
         rb = GetComponent<Rigidbody2D>();
-        //   Debug.Log("StateMachine Initialized with: " + (StateMachine.CurrentPlayerState != null ? StateMachine.CurrentPlayerState.GetType().Name : "Null"));
         StateMachine.ConfigureTransitions(this);
 
         enemyHitBox.OnHitPlayer += TakeDamage;
@@ -67,7 +69,6 @@ public class Player : MonoBehaviour, IMoveable
     }
     private void Update()
     {
-       // StateMachine.CurrentPlayerState.FrameUpdate();
         StateMachine.LogicUpdate();
     }
     private void FixedUpdate()
@@ -79,19 +80,11 @@ public class Player : MonoBehaviour, IMoveable
     {
         IsGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundRadius, _groundLayer);
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        
-    }
+
+    #region Hit&Death
     public void TakeDamage(float damage)
     {
         stats.CurHealth -= damage;
-        //if (stats.CurHealth <= 0)
-        //    StateMachine.ChangeState(DeathState);
-        //else
-        //    StateMachine.ChangeState(HitState);
-
-        //Debug.Log("aaaaa");
         HasTakenDamage = true; 
         OnDamageTaken?.Invoke();
     }
@@ -99,6 +92,7 @@ public class Player : MonoBehaviour, IMoveable
     {
         StateMachine.CurrentPlayerState?.OnAnimationEnd("Hit");
     }
+    #endregion
 
     #region Movement&Flip Controller
     public void CheckForLeftOrRightFacing(Vector2 velocity)
@@ -134,7 +128,6 @@ public class Player : MonoBehaviour, IMoveable
         {
             Debug.LogError("error has appeard");
         }
-       // StateMachine.CurrentPlayerState.AnimationTriggerEvent(triggerType);
     }
     public void AnimationBoolEvent(AnimationBoolType boolType, bool value)
     {

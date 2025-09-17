@@ -13,8 +13,9 @@ public class PlayerStateMachine
         transitions[player.IdleState] = new List<Transitions>()
         {
             new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
-            new Transitions(player.HitState, new HasDamagedCondition(player)),
+            new Transitions(player.HitState, new HasDamagedCondition(player),new HasHealthCondition(player)),
             new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.DeathState, new HasDamagedCondition(player),new HasNoHealthCondition(player)),
             new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
         };
 
@@ -22,7 +23,8 @@ public class PlayerStateMachine
         {
             new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
             new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
-            new Transitions(player.HitState, new HasDamagedCondition(player)),
+            new Transitions(player.HitState, new HasDamagedCondition(player),new HasHealthCondition(player)),
+            new Transitions(player.DeathState, new HasDamagedCondition(player),new HasNoHealthCondition(player)),
             new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
         };
     
@@ -30,14 +32,16 @@ public class PlayerStateMachine
         {
             new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
             new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
-            new Transitions(player.HitState, new HasDamagedCondition(player)),
+            new Transitions(player.HitState, new HasDamagedCondition(player),new HasHealthCondition(player)),
+            new Transitions(player.DeathState, new HasDamagedCondition(player),new HasNoHealthCondition(player)),
             new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/)
         };
         transitions[player.AttackState] = new List<Transitions>()
         {
             new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
             new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
-            new Transitions(player.HitState, new HasDamagedCondition(player)),
+            new Transitions(player.HitState, new HasDamagedCondition(player),new HasHealthCondition(player)),
+            new Transitions(player.DeathState, new HasDamagedCondition(player),new HasNoHealthCondition(player)),
             new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player))
         };
         transitions[player.HitState] = new List<Transitions>()
@@ -45,8 +49,11 @@ public class PlayerStateMachine
             new Transitions(player.IdleState, new HasNoMoveInputCondition(player), new IsGroundedCondition(player)),
             new Transitions(player.JumpState, new JumpPressedCondition(player), new IsGroundedCondition(player)),
             new Transitions(player.AttackState, new AttackPressedCondition(player)/*, new IsGroundedCondition(player)*/),
-            new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player))
+            new Transitions(player.MoveState, new HasMoveInputCondition(player), new IsGroundedCondition(player)),
+            new Transitions(player.DeathState, new HasDamagedCondition(player),new HasNoHealthCondition(player))
         };
+        transitions[player.DeathState] = new List<Transitions>();
+
     }
     public void LogicUpdate()
     {
@@ -70,7 +77,7 @@ public class PlayerStateMachine
         CurrentPlayerState = startingState;
         CurrentPlayerState.EnterState();
     }
-    public void ChangeState(PlayerStates newState)//burda �nce mevcut durumdan ��k�l�yor sonra yeni state ba�lan�yor sonra da yeni statei giri� state yap�l�yor
+    public void ChangeState(PlayerStates newState)//burda önce mevcut durumdan çıkılıyor sonra yeni state başlanıyor sonra da yeni statei giriş state yapılıyor
     {
         CurrentPlayerState.ExitState();
         CurrentPlayerState = newState;

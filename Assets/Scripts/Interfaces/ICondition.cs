@@ -41,5 +41,17 @@ public class HasDamagedCondition : ICondition
     public HasDamagedCondition(Player player) { this.player = player; }
     public bool Evaluate() => player.HasTakenDamage;
 }
+public class HasHealthCondition : ICondition
+{
+    private Player player;
+    public HasHealthCondition(Player player) { this.player = player; }
+    public bool Evaluate() => player.stats.CurHealth > 0;
+}
+public class HasNoHealthCondition : ICondition
+{
+    private Player player;
+    public HasNoHealthCondition(Player player) { this.player = player; }
+    public bool Evaluate() => player.stats.CurHealth <= 0;
+}
 
 
