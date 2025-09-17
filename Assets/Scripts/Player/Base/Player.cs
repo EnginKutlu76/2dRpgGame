@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -16,7 +17,8 @@ public class Player : MonoBehaviour, IMoveable
 
     public PlayerStats stats;
     private Animator _animator;
-   
+    public event Action OnDamageTaken;
+    public bool HasTakenDamage { get; private set; }
     [SerializeField] private HitBox enemyHitBox;
     
     #region State Machine Variables
@@ -84,10 +86,18 @@ public class Player : MonoBehaviour, IMoveable
     public void TakeDamage(float damage)
     {
         stats.CurHealth -= damage;
-        if (stats.CurHealth <= 0)
-            StateMachine.ChangeState(DeathState);
-        else
-            StateMachine.ChangeState(HitState);
+        //if (stats.CurHealth <= 0)
+        //    StateMachine.ChangeState(DeathState);
+        //else
+        //    StateMachine.ChangeState(HitState);
+
+        //Debug.Log("aaaaa");
+        HasTakenDamage = true; 
+        OnDamageTaken?.Invoke();
+    }
+    public void OnHitAnimationEnd()
+    {
+        StateMachine.CurrentPlayerState?.OnAnimationEnd("Hit");
     }
 
     #region Movement&Flip Controller

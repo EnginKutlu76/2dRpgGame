@@ -16,9 +16,15 @@ public class HitState : PlayerStates
     }
     public override void EnterState()
     {
-        base.EnterState();
-        AnimationTriggerEvent(Player.AnimationTriggerType.Hit);
+        if (player.stats.CurHealth <= 0)
+        {
+            player.StateMachine.ChangeState(player.DeathState);
+            return;
+        }
 
+        // Hit animasyonunu tetikle
+        AnimationTriggerEvent(Player.AnimationTriggerType.Hit);
+        Debug.Log("Player HitState Entered");
     }
     public override void ExitState()
     {
@@ -32,5 +38,13 @@ public class HitState : PlayerStates
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+    }
+    public override void OnAnimationEnd(string animationName)
+    {
+        if (animationName == "Hit")
+        {
+            if (player.stats.CurHealth > 0)
+                player.StateMachine.ChangeState(player.IdleState);
+        }
     }
 }

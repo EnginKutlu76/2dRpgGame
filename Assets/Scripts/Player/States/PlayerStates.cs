@@ -19,4 +19,6 @@ public class PlayerStates
     public virtual void PhysicsUpdate() { }//Physics bazl� update (Rigidbody hareketleri gibi fizik tabanl� i�lemler)
     public virtual void AnimationTriggerEvent(Player.AnimationTriggerType triggerType) { }// Animator'dan gelen trigger eventlerini yakalamak i�in kullan�l�r
     public virtual void AnimationBoolEvent(Player.AnimationBoolType boolType, bool value) { }//Animator'dan gelen bool eventlerini yakalamak i�in kullan�l�r
+
+    public virtual void OnAnimationEnd(string animationName) { }
 }

@@ -35,5 +35,11 @@ public class AttackPressedCondition : ICondition
     public AttackPressedCondition(Player player) { this.player = player; }
     public bool Evaluate() => player.Input.AttackPressed();
 }
+public class HasDamagedCondition : ICondition
+{
+    private Player player;
+    public HasDamagedCondition(Player player) { this.player = player; }
+    public bool Evaluate() => player.HasTakenDamage;
+}
 
 
